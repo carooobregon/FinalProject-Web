@@ -1,0 +1,20 @@
+{
+  "name": "project-axios",
+  "version": "1.0.0",
+  "description": "## Description Create the same pokemon deck app (retrieve pokemon data using ExpressJS as an intermediate point) but now the cache mechanism is going to be powered by a database instance.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rafael",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^9.0.2",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.7"
+  },
+  "devDependencies": {},
+  "keywords": []
+}
