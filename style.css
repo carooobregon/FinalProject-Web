@@ -1,0 +1,36 @@
+body {
+  padding: 16px;
+}
+
+h1 {
+  margin: 16px
+}
+
+img {
+  height: auto;
+  width: 50%;
+  margin: auto;
+}
+
+form {
+  width:30%;
+  margin: 16px;
+}
+
+table {
+  margin: 16px;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.priceContainer {
+  display: flex;
+  margin: 24px 0 32px;
+}
+
+.hidden {
+  display:none;
+}
