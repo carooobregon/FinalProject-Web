@@ -7,7 +7,9 @@ const ejs = require('ejs');
 
 let ProductModel;
 
-app.use(cors());
+// app.use(cors());
+app.use(express.json()); // body-parser
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -81,6 +83,22 @@ app.route('/products/:id/edit').get((req, res) => {
           res.end(str);
       }
   });
+});
+
+app.route('/products/:id').put((req, res) => {
+  let productId  = req.params.id;
+  let{ name, price, brand } = req.body;
+  console.log(req.body)
+  ProductModel.findOneAndUpdate(
+      {_id: productId}, // selection criteria
+      {
+          name: name,
+          price: price,
+          brand: brand
+      }
+  )
+  .then(product => res.send(product))
+  .catch(err => { console.log(error); res.status(503).end(`Could not update product ${error}`); });
 });
 
 app.get('/create', (req,res) => {

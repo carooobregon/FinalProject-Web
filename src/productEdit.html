@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Editing a new movie</title>
+  <title>Editing a new products</title>
 </head>
 <body>
-    <h1>Edit data for the new movie</h1>
+    <h1>Edit data for the new products</h1>
     <form>
         <label for="txtName">Name:</label>
         <input type="text" id="txtName"><br>
@@ -22,7 +22,7 @@
         <label for="txtPrice">Price:</label>
         <input type="number" id="txtPrice"><br>
 
-        <input type="submit" id="submit" value="Update movie"> 
+        <input type="submit" id="submit" value="Update products"> 
     </form>
     
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -34,39 +34,39 @@
 
         loadProductData();
         
-        // const btnSubmit = document.getElementById('submit');
-        // btnSubmit.addEventListener("click", (e) => {
-        //     e.preventDefault();
+        const btnSubmit = document.getElementById('submit');
+        btnSubmit.addEventListener("click", (e) => {
+            event.preventDefault()
+
+            // e.preventDefault();
             
-        //     let title = txtName.value.trim();
-        //     let rating = txtBrand.value.trim();
-        //     let year = txtPrice.value.trim();
-        //     let director = txtDirector.value.trim();
+            let name = txtName.value.trim();
+            let brand = txtBrand.value.trim();
+            let price = txtPrice.value.trim();
+            console.log("updating!", name,brand, price)
+            // // Comment to check out how server validation is working too
+            if (name === '') { alert('Specify a name'); return; }
+            if (brand ==='' ) { console.log('Input valid brand ${brand}`', brand); return; }
+            if (price ==='' || isNaN(price)) { alert('Input valid price'); return; }
 
-        //     // Comment to check out how server validation is working too
-        //     if (title === '') { alert('Specify a title'); return; }
-        //     if (rating ==='' || isNaN(rating)) { alert('Input valid rating'); return; }
-        //     if (year ==='' || isNaN(year)) { alert('Input valid year'); return; }
-
-        //     axios.put( 
-        //         `http://127.0.0.1:3000/movies/${movieId}`, 
-        //         {
-        //             title: title,
-        //             rating: rating,
-        //             year: year,
-        //             director: director
-        //         }
-        //     )
-        //     .then(response => {
-        //         console.log(response);
-        //         alert(`Movie updated successfully`);
-        //         window.location.replace('http://127.0.0.1:3000/movies/all');
-        //     })
-        //     .catch(error => {
-        //         console.log(error.response.data)
-        //         alert(`Problem when updating movie ${error.response.data}`);
-        //     });
-        // });
+            axios.put( 
+                `http://127.0.0.1:3000/products/${productId}`, 
+                {
+                    name: name,
+                    price: price,
+                    brand: brand
+                }
+            )
+            .then(response => {
+                console.log(response);
+                alert(`products updated successfully`);
+                window.location.replace('http://127.0.0.1:3000/products/all');
+            })
+            .catch(error => {
+                console.log(error.response.data)
+                alert(`Problem when updating products ${error.response.data}`);
+            });
+        });
 
         function loadProductData(){
             axios.get(`http://127.0.0.1:3000/products/${productId}`)
@@ -79,7 +79,7 @@
             .catch(error => {
                 console.log(error.response.data);
                 btnSubmit.disabled = true;
-                alert(`Problem when loading data for movie ${error.response.data}`);
+                alert(`Problem when loading data for products ${error.response.data}`);
             });
         }
     </script>
