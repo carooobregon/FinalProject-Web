@@ -4,6 +4,9 @@
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
+  <!-- <link rel="stylesheet" href="../style.css"> -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Editing a new movie</title>
 </head>
@@ -13,10 +16,10 @@
         <label for="txtName">Name:</label>
         <input type="text" id="txtName"><br>
 
-        <label for="txtBrand">Rating:</label>
+        <label for="txtBrand">Brand:</label>
         <input type="text" id="txtBrand"><br>
 
-        <label for="txtPrice">Year:</label>
+        <label for="txtPrice">Price:</label>
         <input type="number" id="txtPrice"><br>
 
         <input type="submit" id="submit" value="Update movie"> 
@@ -25,12 +28,11 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         const productId = '<%= productId %>';
-        // const txtName = document.getElementById('txtName');
-        // const txtBrand = document.getElementById('txtBrand');
-        // const txtPrice = document.getElementById('txtPrice');
-        // const txtDirector = document.getElementById('txtDirector');
+        const txtName = document.getElementById('txtName');
+        const txtBrand = document.getElementById('txtBrand');
+        const txtPrice = document.getElementById('txtPrice');
 
-        // loadMovieData();
+        loadProductData();
         
         // const btnSubmit = document.getElementById('submit');
         // btnSubmit.addEventListener("click", (e) => {
@@ -66,21 +68,20 @@
         //     });
         // });
 
-        // function loadMovieData(){
-        //     axios.get(`http://127.0.0.1:3000/movies/${movieId}`)
-        //     .then(response => {
-        //         console.log(response);
-        //         txtName.value = response.data.title;
-        //         txtBrand.value = response.data.rating;
-        //         txtPrice.value = response.data.year;
-        //         txtDirector.value = response.data.director;
-        //     })
-        //     .catch(error => {
-        //         console.log(error.response.data);
-        //         btnSubmit.disabled = true;
-        //         alert(`Problem when loading data for movie ${error.response.data}`);
-        //     });
-        // }
+        function loadProductData(){
+            axios.get(`http://127.0.0.1:3000/products/${productId}`)
+            .then(response => {
+                console.log(response);
+                txtName.value = response.data.name;
+                txtBrand.value = response.data.brand;
+                txtPrice.value = response.data.price;
+            })
+            .catch(error => {
+                console.log(error.response.data);
+                btnSubmit.disabled = true;
+                alert(`Problem when loading data for movie ${error.response.data}`);
+            });
+        }
     </script>
 </body>
 </html>
