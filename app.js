@@ -72,6 +72,17 @@ app.route('/products/:id').get(async (req, res) => {
       res.status(404).end(`Product with id ${productId} does not exist`)
 });
 
+app.route('/products/:id/edit').get((req, res) => {
+  let productId  = req.params.id;
+
+  ejs.renderFile('./src/productEdit.html', {productId: productId}, null, function(err, str){
+      if (err) res.status(503).send(`error when rendering the view: ${err}`); 
+      else {
+          res.end(str);
+      }
+  });
+});
+
 app.get('/create', (req,res) => {
   let productName = req.query.name
   let product = {name: productName, price: req.query.price, brand: req.query.brand}

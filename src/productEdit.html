@@ -1,0 +1,87 @@
+<!-- This file is given to the client in the main route -->
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editing a new movie</title>
+</head>
+<body>
+    <h1>Edit data for the new movie</h1>
+    <form>
+        <label for="txtName">Name:</label>
+        <input type="text" id="txtName"><br>
+
+        <label for="txtBrand">Rating:</label>
+        <input type="text" id="txtBrand"><br>
+
+        <label for="txtPrice">Year:</label>
+        <input type="number" id="txtPrice"><br>
+
+        <input type="submit" id="submit" value="Update movie"> 
+    </form>
+    
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        const productId = '<%= productId %>';
+        // const txtName = document.getElementById('txtName');
+        // const txtBrand = document.getElementById('txtBrand');
+        // const txtPrice = document.getElementById('txtPrice');
+        // const txtDirector = document.getElementById('txtDirector');
+
+        // loadMovieData();
+        
+        // const btnSubmit = document.getElementById('submit');
+        // btnSubmit.addEventListener("click", (e) => {
+        //     e.preventDefault();
+            
+        //     let title = txtName.value.trim();
+        //     let rating = txtBrand.value.trim();
+        //     let year = txtPrice.value.trim();
+        //     let director = txtDirector.value.trim();
+
+        //     // Comment to check out how server validation is working too
+        //     if (title === '') { alert('Specify a title'); return; }
+        //     if (rating ==='' || isNaN(rating)) { alert('Input valid rating'); return; }
+        //     if (year ==='' || isNaN(year)) { alert('Input valid year'); return; }
+
+        //     axios.put( 
+        //         `http://127.0.0.1:3000/movies/${movieId}`, 
+        //         {
+        //             title: title,
+        //             rating: rating,
+        //             year: year,
+        //             director: director
+        //         }
+        //     )
+        //     .then(response => {
+        //         console.log(response);
+        //         alert(`Movie updated successfully`);
+        //         window.location.replace('http://127.0.0.1:3000/movies/all');
+        //     })
+        //     .catch(error => {
+        //         console.log(error.response.data)
+        //         alert(`Problem when updating movie ${error.response.data}`);
+        //     });
+        // });
+
+        // function loadMovieData(){
+        //     axios.get(`http://127.0.0.1:3000/movies/${movieId}`)
+        //     .then(response => {
+        //         console.log(response);
+        //         txtName.value = response.data.title;
+        //         txtBrand.value = response.data.rating;
+        //         txtPrice.value = response.data.year;
+        //         txtDirector.value = response.data.director;
+        //     })
+        //     .catch(error => {
+        //         console.log(error.response.data);
+        //         btnSubmit.disabled = true;
+        //         alert(`Problem when loading data for movie ${error.response.data}`);
+        //     });
+        // }
+    </script>
+</body>
+</html>
+
