@@ -38,7 +38,7 @@ function populateTable(products){
   buttonEdit.appendChild(document.createTextNode('Edit'));
   buttonEdit.setAttribute("class", "btn btn-info btn-sm")
   //TODO: send to EDIT view
-  //btnEdit.addEventListener('click', () => { window.location.replace(`http://127.0.0.1:3000/products/${product.name}/edit`) });
+  buttonEdit.addEventListener('click', () => { window.location.replace(`http://127.0.0.1:3000/products/${product._id}/edit`) });
   cellEdit.appendChild(buttonEdit);
 
   buttonDelete = document.createElement('button');

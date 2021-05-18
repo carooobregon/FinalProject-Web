@@ -17,7 +17,7 @@ mongoose.set('useCreateIndex', true);  // remove warning
 
 // 2. Defining the schema
 const productSchema = new mongoose.Schema({
-    name: {type: String, unique:true, required: true},
+    name: {type: String, required: true},
     price: {type: Number, required: true},
     brand: String,
 });
@@ -63,13 +63,13 @@ app.get('/products/all', async (req, res) => {
   res.send(allProducts);
 })
 
-app.route('/products/:name').get(async (req, res) => {
-  let productName  = req.params.name;
-  let product = await ProductModel.findOne({name: productName});
+app.route('/products/:id').get(async (req, res) => {
+  let productId  = req.params.id;
+  let product = await ProductModel.findOne({_id: productId});
   if (product)
       res.send(product);
   else
-      res.status(404).end(`Product with id ${product} does not exist`)
+      res.status(404).end(`Product with id ${productId} does not exist`)
 });
 
 app.get('/create', (req,res) => {
