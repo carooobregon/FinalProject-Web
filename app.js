@@ -3,6 +3,8 @@ const cors = require('cors')
 const app = express()
 const port = 3000
 const axios = require('axios').default
+const ejs = require('ejs');
+
 let ProductModel;
 
 app.use(cors());
@@ -56,6 +58,20 @@ app.get('/products', (req, res) => {
   res.sendFile('productList.html', {root: './src/'});
 })
 
+app.get('/products/all', async (req, res) => {
+  let allProducts = await ProductModel.find();
+  res.send(allProducts);
+})
+
+app.route('/products/:name').get(async (req, res) => {
+  let productName  = req.params.name;
+  let product = await ProductModel.findOne({name: productName});
+  if (product)
+      res.send(product);
+  else
+      res.status(404).end(`Product with id ${product} does not exist`)
+});
+
 app.get('/create', (req,res) => {
   let productName = req.query.name
   let product = {name: productName, price: req.query.price, brand: req.query.brand}
@@ -65,10 +81,6 @@ app.get('/create', (req,res) => {
   }
 )})
 
-app.get('/products/all', async (req, res) => {
-  let allProducts = await ProductModel.find();
-  res.send(allProducts);
-})
 
 app.listen(port, () => {
   console.log(`Your port is ${process.env.PORT}`);
