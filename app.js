@@ -60,6 +60,15 @@ app.get('/products', (req, res) => {
   res.sendFile('productList.html', {root: './src/'});
 })
 
+app.get('/create', (req,res) => {
+  let productName = req.query.name
+  let product = {name: productName, price: req.query.price, brand: req.query.brand}
+  let newProduct = new ProductModel(product)
+  newProduct.save((error) => {
+    error ? res.status(404).send() : res.status(200).send(product)
+  }
+)})
+
 app.get('/products/all', async (req, res) => {
   let allProducts = await ProductModel.find();
   res.send(allProducts);
@@ -72,17 +81,6 @@ app.route('/products/:id').get(async (req, res) => {
       res.send(product);
   else
       res.status(404).end(`Product with id ${productId} does not exist`)
-});
-
-app.route('/products/:id/edit').get((req, res) => {
-  let productId  = req.params.id;
-
-  ejs.renderFile('./src/productEdit.html', {productId: productId}, null, function(err, str){
-      if (err) res.status(503).send(`error when rendering the view: ${err}`); 
-      else {
-          res.end(str);
-      }
-  });
 });
 
 app.route('/products/:id').put((req, res) => {
@@ -101,14 +99,16 @@ app.route('/products/:id').put((req, res) => {
   .catch(err => { console.log(error); res.status(503).end(`Could not update product ${error}`); });
 });
 
-app.get('/create', (req,res) => {
-  let productName = req.query.name
-  let product = {name: productName, price: req.query.price, brand: req.query.brand}
-  let newProduct = new ProductModel(product)
-  newProduct.save((error) => {
-    error ? res.status(404).send() : res.status(200).send(product)
-  }
-)})
+app.route('/products/:id/edit').get((req, res) => {
+  let productId  = req.params.id;
+
+  ejs.renderFile('./src/productEdit.html', {productId: productId}, null, function(err, str){
+      if (err) res.status(503).send(`error when rendering the view: ${err}`); 
+      else {
+          res.end(str);
+      }
+  });
+});
 
 
 app.listen(port, () => {
