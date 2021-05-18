@@ -7,7 +7,7 @@ const ejs = require('ejs');
 
 let ProductModel;
 
-// app.use(cors());
+app.use(cors());
 app.use(express.json()); // body-parser
 
 const dotenv = require('dotenv');
@@ -110,7 +110,7 @@ app.route('/products/:id/edit').get((req, res) => {
   let productId  = req.params.id;
 
   ejs.renderFile('./src/productEdit.html', {productId: productId}, null, function(err, str){
-      if (err) res.status(503).send(`error when rendering the view: ${err}`); 
+      if (err) res.status(503).send(`error when rendering the view: ${err}`);
       else {
           res.end(str);
       }
