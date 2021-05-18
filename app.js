@@ -99,6 +99,13 @@ app.route('/products/:id').put((req, res) => {
   .catch(err => { console.log(error); res.status(503).end(`Could not update product ${error}`); });
 });
 
+app.route('/products/:id').delete((req, res) => {
+  let productId  = req.params.id;
+  ProductModel.findOneAndDelete({_id: productId})
+  .then(product => res.send(product))
+  .catch(err => { console.log(error); res.status(503).end(`Could not delete product ${error}`); });
+});
+
 app.route('/products/:id/edit').get((req, res) => {
   let productId  = req.params.id;
 
