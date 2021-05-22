@@ -12,37 +12,30 @@
   <body>
     <div class='mainContainer'>
 
-      <div id=warning></div>
+      <h1>SIGN UP</h1>
 
-      <h1>SHOPPING CART</h1>
-
-      <form id='productForm'>
+      <form id='signUpForm'>
         <div class="form-group">
-          <label>Products's name</label>
-          <input type="text" id='productName' class="form-control" placeholder="name">
+          <label>Avatar</label>
+          <input type="image" id='avatar'>
         <div class="form-group">
-          <label>Products's price</label>
-          <input type="text" id='productPrice' class="form-control" placeholder="price">
+          <label>Name</label>
+          <input type="text" id='userName' class="form-control" placeholder="Full Name">
         </div>
         <div class="form-group">
-          <label>Products's brand</label>
-          <input type="text" id='productBrand' class="form-control" placeholder="brand">
+          <label>Email</label>
+          <input type="text" id='email' class="form-control" placeholder="Email">
         </div>
-        <input type="submit" class="btn btn-primary" value="Add Product">
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id='password' class="form-control" placeholder="Password">
+        </div>  
+        <input type="submit" class="btn btn-primary" value="Sign Up">
       </form>
-
-      <div class="priceContainer">
-        <h3>Total Price:</h3>
-        <h3 id='totalPrice'>0.00</h3>
-      </div>
-
-      <h2>List of Products:</h2>
-
-      <div class="row" id='productList'></div>
 
     </div>
 
-    <script type="text/javascript" src="products.js"></script>
+    <script type="text/javascript" src="addClient.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
   </body>
 </html>

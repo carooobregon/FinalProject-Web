@@ -27,7 +27,7 @@ const addProduct = (prodObj) => {
 
   let h5 = document.createElement('h5')
   h5.appendChild(document.createTextNode(prodObj.name))
-  h5.setAttribute("class", "card-title")
+  h5.setAttribuete("class", "card-title")
 
   let firstP = document.createElement('p')
   firstP.appendChild(document.createTextNode(`Price: ${prodObj.price}`))

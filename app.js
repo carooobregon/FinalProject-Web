@@ -5,7 +5,7 @@ const port = 3000
 const axios = require('axios').default
 const ejs = require('ejs');
 
-let ProductModel;
+let ProductModel, UserModel;
 
 app.use(cors());
 app.use(express.json()); // body-parser
@@ -24,6 +24,12 @@ const productSchema = new mongoose.Schema({
     brand: String,
 });
 
+const userSchema = new mongoose.Schema({
+    username: {type: String, required: true},
+    email: {type: String},
+    password: {type: String},
+});
+
 // 3. Connecting with the database
 const mongoDB = process.env.MONGOKEY
 mongoose.connect(mongoDB, {useUnifiedTopology: true, useNewUrlParser: true });
@@ -38,6 +44,7 @@ db.once('open', function() {
 function initializeModel(){
   console.log("Initializing the model")
   ProductModel = mongoose.model('Product', productSchema);
+  UserModel = mongoose.model('User', userSchema);
 }
 
 app.route('/').get((req, res) =>{
@@ -48,6 +55,7 @@ app.get('/style.css', (req, res) => {
   res.sendFile("style.css", {root: './'})
 })
 
+// PRODUCTS
 app.get('/products.js', (req, res) => {
   res.sendFile("products.js", {root: './'})
 })
@@ -117,7 +125,29 @@ app.route('/products/:id/edit').get((req, res) => {
   });
 });
 
+// USERS
+app.get('/user', (req, res) => {
+  res.sendFile('clientInsert.html', {root: './src/'});
+})
 
 app.listen(port, () => {
   console.log(`Your port is ${process.env.PORT}`);
+})
+
+app.get('/createUser', (req,res) => {
+  console.log(req.query)
+  let user = {
+              username: req.query.username,
+              email: req.query.email,
+              password: req.query.password
+            }
+  console.log(user)
+  let newUser = new UserModel(user)
+  newUser.save((error) => {
+    error ? res.status(404).send() : res.status(200).send(user)
+  }
+)});
+
+app.get('/addClient.js', (req, res) => {
+  res.sendFile("addClient.js", {root: './'})
 })
