@@ -4,6 +4,7 @@ const app = express()
 const port = 3000
 const axios = require('axios').default
 const ejs = require('ejs');
+var crypto = require('crypto');
 
 let ProductModel, UserModel;
 
@@ -27,7 +28,8 @@ const productSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
     username: {type: String, required: true},
     email: {type: String},
-    password: {type: String},
+    hash: {type: String},
+    salt : {type: String}
 });
 
 // 3. Connecting with the database
@@ -93,8 +95,8 @@ app.route('/products/:id').get(async (req, res) => {
 
 app.route('/products/:id').put((req, res) => {
   let productId  = req.params.id;
-  let{ name, price, brand } = req.body;
   console.log(req.body)
+  let{ name, price, brand } = req.body;
   ProductModel.findOneAndUpdate(
       {_id: productId}, // selection criteria
       {
@@ -116,7 +118,7 @@ app.route('/products/:id').delete((req, res) => {
 
 app.route('/products/:id/edit').get((req, res) => {
   let productId  = req.params.id;
-
+  console.log(req.body)
   ejs.renderFile('./src/productEdit.html', {productId: productId}, null, function(err, str){
       if (err) res.status(503).send(`error when rendering the view: ${err}`);
       else {
@@ -134,20 +136,43 @@ app.listen(port, () => {
   console.log(`Your port is ${process.env.PORT}`);
 })
 
-app.get('/createUser', (req,res) => {
-  console.log(req.query)
-  let user = {
-              username: req.query.username,
-              email: req.query.email,
-              password: req.query.password
-            }
-  console.log(user)
-  let newUser = new UserModel(user)
-  newUser.save((error) => {
-    error ? res.status(404).send() : res.status(200).send(user)
-  }
-)});
+app.route('/createUser').put((req, res) => {
+  console.log(req.body)
+  // let user = {
+  //             username: req.query.username,
+  //             email: req.query.email,
+  //             password: req.query.password
+  //           }
+  // console.log(user)
+  // let newUser = new UserModel(user)
+  // newUser.save((error) => {
+  //   error ? res.status(404).send() : res.status(200).send(user)
+  // }
+});
 
 app.get('/addClient.js', (req, res) => {
   res.sendFile("addClient.js", {root: './'})
 })
+
+// HASHING
+
+userSchema.methods.setPassword = function(password) { 
+  // Creating a unique salt for a particular user 
+     this.salt = crypto.randomBytes(16).toString('hex'); 
+   
+     // Hashing user's salt and password with 1000 iterations, 
+      
+     this.hash = crypto.pbkdf2Sync(password, this.salt,  
+     1000, 64, `sha512`).toString(`hex`); 
+ }; 
+   
+ 
+// Method to check the entered password is correct or not 
+userSchema.methods.validPassword = function(password) { 
+  var hash = crypto.pbkdf2Sync(password,  
+  this.salt, 1000, 64, `sha512`).toString(`hex`); 
+  return this.hash === hash; 
+}; 
+
+// Exporting module to allow it to be imported in other files 
+// const UserModel = module.exports = mongoose.model('User', userSchema); 

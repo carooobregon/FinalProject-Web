@@ -36,15 +36,11 @@
         
         const btnSubmit = document.getElementById('submit');
         btnSubmit.addEventListener("click", (e) => {
-            event.preventDefault()
-
-            // e.preventDefault();
-            
+            event.preventDefault()            
             let name = txtName.value.trim();
             let brand = txtBrand.value.trim();
             let price = txtPrice.value.trim();
             console.log("updating!", name,brand, price)
-            // // Comment to check out how server validation is working too
             if (name === '') { alert('Specify a name'); return; }
             if (brand ==='' ) { console.log('Input valid brand ${brand}`', brand); return; }
             if (price ==='' || isNaN(price)) { alert('Input valid price'); return; }
