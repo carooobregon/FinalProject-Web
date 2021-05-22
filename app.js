@@ -138,16 +138,16 @@ app.listen(port, () => {
 
 app.route('/createUser').put((req, res) => {
   console.log(req.body)
-  // let user = {
-  //             username: req.query.username,
-  //             email: req.query.email,
-  //             password: req.query.password
-  //           }
-  // console.log(user)
-  // let newUser = new UserModel(user)
-  // newUser.save((error) => {
-  //   error ? res.status(404).send() : res.status(200).send(user)
-  // }
+  let user = {
+              username: req.body.username,
+              email: req.body.email,
+              password: req.body.password
+            }
+  let newUser = new UserModel(user)
+  newUser.setPassword(req.body.password)
+  newUser.save((error) => {
+    error ? res.status(404).send() : res.status(200).send(user)
+  });
 });
 
 app.get('/addClient.js', (req, res) => {
