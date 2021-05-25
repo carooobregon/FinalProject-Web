@@ -5,6 +5,20 @@ const port = 3000
 const axios = require('axios').default
 const ejs = require('ejs');
 var crypto = require('crypto');
+const fs = require('fs');
+const multer = require('multer')
+const path = require('path');
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+      callback(null, 'uploads');
+  },
+  filename: (req, file, callback) => {
+      callback(null, file.fieldname + '-' + Date.now())
+  }
+});
+const upload = multer({ storage: storage});
 
 let ProductModel, UserModel;
 
@@ -29,7 +43,13 @@ const userSchema = new mongoose.Schema({
     username: {type: String, required: true},
     email: {type: String},
     hash: {type: String},
-    salt : {type: String}
+    salt : {type: String},
+    avatar:
+    {
+        data: Buffer, // An array
+        contentType: String
+    }
+
 });
 
 // 3. Connecting with the database
@@ -136,12 +156,17 @@ app.listen(port, () => {
   console.log(`Your port is ${process.env.PORT}`);
 })
 
-app.route('/createUser').put((req, res) => {
-  console.log(req.body)
+app.post('/createUser', upload.single('avatar'), (req, res) => {
+  console.log("file", req.file, req)
+  avatarObject = {
+    data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+    contentType: 'image/jpg'
+  };
   let user = {
-              username: req.body.username,
+              username: req.body.name,
               email: req.body.email,
-              password: req.body.password
+              password: req.body.password,
+              avatar: avatarObject
             }
   let newUser = new UserModel(user)
   newUser.setPassword(req.body.password)
