@@ -4,81 +4,85 @@
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
-  <!-- <link rel="stylesheet" href="../style.css"> -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Editing a new products</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>Editing Products</title>
 </head>
-<body>
-    <h1>Edit data for the new products</h1>
-    <form>
-        <label for="txtName">Name:</label>
-        <input type="text" id="txtName"><br>
-
-        <label for="txtBrand">Brand:</label>
-        <input type="text" id="txtBrand"><br>
-
-        <label for="txtPrice">Price:</label>
-        <input type="number" id="txtPrice"><br>
-
-        <input type="submit" id="submit" value="Update products"> 
-    </form>
+<body  style="padding: 16px;">
+ 
+  <div style="display:flex;flex-direction:column;">
     
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-        const productId = '<%= productId %>';
-        const txtName = document.getElementById('txtName');
-        const txtBrand = document.getElementById('txtBrand');
-        const txtPrice = document.getElementById('txtPrice');
+    <h1 style='margin:16px'>Edit your product's data</h1>
+    
+    <form style="width:30%;margin:16px;">
+      <div class="form-group">
+        <label for="txtName">Name:</label>
+        <input type="text" id="txtName" class="form-control" placeholder="name">
+      </div>
+      <div class="form-group">
+        <label for="txtBrand">Brand:</label>
+        <input type="text" id="txtBrand" class="form-control" placeholder="brand">
+      </div>
+      <div class="form-group">
+        <label for="txtPrice">Price:</label>
+        <input type="number" id="txtPrice" class="form-control" placeholder="price">
+      </div>
+      <input type="submit" id="submit" value="Update products" class="btn btn-primary"> 
+    </form>
 
-        loadProductData();
-        
-        const btnSubmit = document.getElementById('submit');
-        btnSubmit.addEventListener("click", (e) => {
-            event.preventDefault()            
-            let name = txtName.value.trim();
-            let brand = txtBrand.value.trim();
-            let price = txtPrice.value.trim();
-            console.log("updating!", name,brand, price)
-            if (name === '') { alert('Specify a name'); return; }
-            if (brand ==='' ) { console.log('Input valid brand ${brand}`', brand); return; }
-            if (price ==='' || isNaN(price)) { alert('Input valid price'); return; }
+  </div>
+    
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const productId = '<%= productId %>'
+    const txtName = document.getElementById('txtName')
+    const txtBrand = document.getElementById('txtBrand')
+    const txtPrice = document.getElementById('txtPrice')
+    const btnSubmit = document.getElementById('submit')    
 
-            axios.put( 
-                `http://127.0.0.1:3000/products/${productId}`, 
-                {
-                    name: name,
-                    price: price,
-                    brand: brand
-                }
-            )
-            .then(response => {
-                console.log(response);
-                alert(`products updated successfully`);
-                window.location.replace('http://127.0.0.1:3000/products');
-            })
-            .catch(error => {
-                console.log(error.response.data)
-                alert(`Problem when updating products ${error.response.data}`);
-            });
-        });
+    loadProductData()
+    btnSubmit.addEventListener("click", (e) => {
+      event.preventDefault()            
+      let name = txtName.value.trim()
+      let brand = txtBrand.value.trim()
+      let price = txtPrice.value.trim()
+      if (name === '') { alert('Specify a name'); return; }
+      if (brand ==='' ) { alert('Brand must not be empty'); return; }
+      if (price ==='' || isNaN(price)) { alert('Insert a valid price'); return; }
 
-        function loadProductData(){
-            axios.get(`http://127.0.0.1:3000/products/${productId}`)
-            .then(response => {
-                console.log(response);
-                txtName.value = response.data.name;
-                txtBrand.value = response.data.brand;
-                txtPrice.value = response.data.price;
-            })
-            .catch(error => {
-                console.log(error.response.data);
-                btnSubmit.disabled = true;
-                alert(`Problem when loading data for products ${error.response.data}`);
-            });
+      axios.put( 
+        `http://127.0.0.1:3000/products/${productId}`, 
+        {
+          name: name,
+          price: price,
+          brand: brand
         }
-    </script>
+      )
+      .then(response => {
+        alert(`products updated successfully`);
+        window.location.replace('http://127.0.0.1:3000/products');
+      })
+      .catch(error => {
+        console.log(error.response.data)
+        alert(`Problem when updating products ${error.response.data}`);
+      });
+    });
+
+    // Get product data from db
+    function loadProductData(){
+      axios.get(`http://127.0.0.1:3000/products/${productId}`)
+      .then(response => {
+        txtName.value = response.data.name;
+        txtBrand.value = response.data.brand;
+        txtPrice.value = response.data.price;
+      })
+      .catch(error => {
+        btnSubmit.disabled = true;
+        alert(`Problem when loading data for products ${error.response.data}`);
+      });
+    }
+  </script>
 </body>
 </html>
 

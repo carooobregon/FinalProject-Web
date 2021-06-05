@@ -49,13 +49,12 @@ function populateTable(products){
     let productId = product._id;
     axios.delete(`http://127.0.0.1:3000/products/${productId}`)
     .then(response => {
-        console.log(response);
-        alert('Poduct deleted successfully');
-        row.parentNode.removeChild(row);
+      alert('Poduct deleted successfully');
+      row.parentNode.removeChild(row);
     })
     .catch(error => {
-        console.log(error.response);
-        alert(`Problem when deleting the product info ${error.response}`);
+      console.log(error.response);
+      alert(`Problem when deleting the product info ${error.response}`);
     });
 });
   cellDelete.appendChild(buttonDelete);

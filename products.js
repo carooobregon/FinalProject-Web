@@ -40,7 +40,6 @@ const addProduct = (prodObj) => {
   let removeButton = document.createElement('button')
   removeButton.addEventListener('click', (e) => {
     let target = e.target.parentNode.parentNode
-    console.log(target)
     totalPrice -= parseFloat(prodObj.price) //modify total price
     document.getElementById('totalPrice').innerHTML = parseFloat(totalPrice).toFixed(2)
     productList.removeChild(target)
