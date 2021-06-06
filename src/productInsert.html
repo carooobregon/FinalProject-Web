@@ -29,20 +29,22 @@
           <label>Products's brand</label>
           <input type="text" id='productBrand' class="form-control" placeholder="brand">
         </div>
-        <input type="submit" class="btn btn-primary" value="Add Product">
-      </form>
+        <input type="submit" class="btn btn-primary" value="Add Product"> <br>
+        <button style='margin-top: 12px;' type="button" id='logout' class="btn btn-link btn-sm">Logout</button>
 
+      </form>
       <div class="priceContainer">
         <h3>Total Price:</h3>
         <h3 id='totalPrice'>0.00</h3>
       </div>
 
-      <h2>List of Products:</h2>
+      <h3>List of products added</h3>
 
       <div class="row" id='productList'></div>
 
     </div>
 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript" src="products.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
   </body>

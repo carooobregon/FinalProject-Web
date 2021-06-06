@@ -91,4 +91,16 @@ productForm.onsubmit = (e) => {
       })
   }
 };
+
+const btnLogout = document.getElementById('logout');
+  btnLogout.addEventListener("click", (e) => {
+    axios.post('http://127.0.0.1:3000/logout') // No params, the cookie handles all
+    .then(() => {
+      alert(`You have been logged out, you are being redirected`);
+      window.location.replace('http://127.0.0.1:3000/login');
+    })
+    .catch(error => {
+      alert(`Error: ${error.response.data}`);
+  });
+});
   
