@@ -30,7 +30,7 @@ ajaxPromise.then((response) => {
 
 buybtn.addEventListener("click",()=>{
   console.log("hola")
-  alert("Bought shopping cart!")
+  alert("Bought shopping cart! Your total was $" + finalTotal )
 })
 
 function populateTable(products){
