@@ -132,9 +132,17 @@ app.get('/productList.js', (req, res) => {
   res.sendFile("productList.js", {root: './'})
 })
 
+app.get('/shoppingCart.js', (req, res) => {
+  res.sendFile("shoppingCart.js", {root: './'})
+})
+
 // Get product list view file. Requires login
 app.get('/products', requireLogin, (req, res) => {
   res.sendFile('productList.html', {root: './src/'});
+})
+
+app.get('/cart', (req, res) => {
+  res.sendFile('shoppingcart.html', {root: './src/'});
 })
 
 // Create new product
@@ -210,7 +218,9 @@ app.get('/signup', (req, res) => {
 app.post('/login', function (req, res) {
   const { userEmail, password } = req.body;
   // This is just for testing purposes. Change to find user on db (if required changed body parameters)
-  const user = allUsers.find(u => { return u.userEmail === userEmail && u.password === password });
+  const user = UserModel.findOne({_id: userEmail})
+  console.log("found user", user)
+  // allUsers.find(u => { return u.userEmail === userEmail && u.password === password });
   
   if (user) {
     console.log(`Succesfully logged in`);
