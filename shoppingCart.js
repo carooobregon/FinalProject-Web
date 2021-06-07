@@ -1,7 +1,8 @@
 
 const productsTable = document.getElementById('productsTable');
 const addButton = document.getElementById('btnAdd');
-
+const total = document.getElementById("totalnum");
+const buybtn = document.getElementById("buybtn");
 var boughtItems = [];
 var finalTotal = 0;
 var tempVal = 0;
@@ -27,6 +28,11 @@ ajaxPromise.then((response) => {
  console.log("ERROR", err)
 })
 
+buybtn.addEventListener("click",()=>{
+  console.log("hola")
+  alert("Bought shopping cart!")
+})
+
 function populateTable(products){
   JSON.parse(products).forEach(product => { 
   let row = productsTable.insertRow(); 
@@ -48,7 +54,8 @@ function populateTable(products){
     var inputVal = document.getElementById(product._id);
     allPrices[product._id] = product.price * inputVal.value
     finalTotal = sumMap()
-    console.log(finalTotal)
+    console.log(finalTotal,total)
+    total.innerText = finalTotal
   });
   cellQuantity.appendChild(amountBox)
 });
