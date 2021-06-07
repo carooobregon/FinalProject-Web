@@ -1,6 +1,6 @@
 
 const productsTable = document.getElementById('productsTable');
-const addButton = document.getElementById('btnAdd');
+const addButton = document.getElementById('addBtn');
 
 let url = `http://127.0.0.1:3000/products/all`
 let ajaxPromise = new Promise((resolve, reject) => {
@@ -22,6 +22,8 @@ ajaxPromise.then((response) => {
  console.log("ERROR", err)
 })
 
+addButton.addEventListener('click', () => { window.location.replace(`http://127.0.0.1:3000/addProduct`) });
+
 function populateTable(products){
   JSON.parse(products).forEach(product => { 
   let row = productsTable.insertRow(); 
@@ -38,7 +40,6 @@ function populateTable(products){
   buttonEdit = document.createElement('button');
   buttonEdit.appendChild(document.createTextNode('Edit'));
   buttonEdit.setAttribute("class", "btn btn-info btn-sm")
-  //TODO: send to EDIT view
   buttonEdit.addEventListener('click', () => { window.location.replace(`http://127.0.0.1:3000/products/${product._id}/edit`) });
   cellEdit.appendChild(buttonEdit);
 
@@ -82,3 +83,15 @@ const deleteProduct = (product) => {
   console.log("ERROR", err)
   })
 }
+
+const btnLogout = document.getElementById('logout');
+  btnLogout.addEventListener("click", (e) => {
+    axios.post('http://127.0.0.1:3000/logout') // No params, the cookie handles all
+    .then(() => {
+      alert(`You have been logged out, you are being redirected`);
+      window.location.replace('http://127.0.0.1:3000/login');
+    })
+    .catch(error => {
+      alert(`Error: ${error.response.data}`);
+  });
+});

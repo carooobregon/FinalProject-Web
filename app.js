@@ -17,12 +17,6 @@ const port = 3000
 // To create tokens we need a secret password.
 const secret = '5tr0n6P@55W0rD!' // TODO: Change this secret password and move it to .env file
 
-//Created this db just for example. Password is already hashed on db. TODO: DELETE this when retrieving users from db
-const allUsers = [
-  { userEmail: "rafael", id: 1, password: "thepassword" },
-  { userEmail: "john", id: 2, password: "1234" },
-];
-
 app.use(cors());
 app.use(express.json()); // body-parser
 app.use(cookieParser())
@@ -120,8 +114,18 @@ app.get('/style.css', (req, res) => {
 // PRODUCTS
 
 // Get insert product view file. Requires login
-app.get('/', requireLogin, (req, res) => {
+app.get('/addProduct', requireLogin, (req, res) => {
   res.sendFile('productInsert.html', {root: './src/'});
+})
+
+// Get product list view file where admin can add product. Requires login
+app.get('/admin', requireLogin, (req, res) => {
+  res.sendFile('productList.html', {root: './src/'});
+})
+
+// Get normal user's view file where user can buy products. Requires login
+app.get('/', requireLogin, (req, res) => {
+  res.sendFile('shoppingcart.html', {root: './src/'});
 })
 
 app.get('/products.js', (req, res) => {
@@ -134,15 +138,6 @@ app.get('/productList.js', (req, res) => {
 
 app.get('/shoppingCart.js', (req, res) => {
   res.sendFile("shoppingCart.js", {root: './'})
-})
-
-// Get product list view file. Requires login
-app.get('/products', requireLogin, (req, res) => {
-  res.sendFile('productList.html', {root: './src/'});
-})
-
-app.get('/cart', (req, res) => {
-  res.sendFile('shoppingcart.html', {root: './src/'});
 })
 
 // Create new product
@@ -196,10 +191,10 @@ app.route('/products/:id').delete((req, res) => {
 app.route('/products/:id/edit').get((req, res) => {
   let productId  = req.params.id;
   ejs.renderFile('./src/productEdit.html', {productId: productId}, null, function(err, str){
-      if (err) res.status(503).send(`error when rendering the view: ${err}`);
-      else {
-        res.end(str);
-      }
+    if (err) res.status(503).send(`error when rendering the view: ${err}`);
+    else {
+      res.end(str);
+    }
   });
 });
 
@@ -215,13 +210,16 @@ app.get('/signup', (req, res) => {
   res.sendFile('signUp.html', {root: './src/'});
 })
 
+// Logout user
+app.post('/logout', requireLogin, function(req, res){
+  console.log('Logging out')
+  res.clearCookie('authorization');
+  res.send('User logged out');
+});
+
 app.post('/login', function (req, res) {
   const { userEmail, password } = req.body;
-  // This is just for testing purposes. Change to find user on db (if required changed body parameters)
-  const user = UserModel.findOne({_id: userEmail})
-  console.log("found user", user)
-  // allUsers.find(u => { return u.userEmail === userEmail && u.password === password });
-  
+  const user = UserModel.findOne({_id: userEmail})  
   if (user) {
     console.log(`Succesfully logged in`);
     const accessToken = generateToken(user); // Generate access token
@@ -230,13 +228,6 @@ app.post('/login', function (req, res) {
   }else{
     res.status(403).send('Invalid credentials'); // User doesn't exist
   }
-});
-
-// Logout user
-app.post('/logout', requireLogin, function(req, res){
-  console.log('Logging out')
-  res.clearCookie('authorization');
-  res.send('User logged out');
 });
 
 // Create user with avatar
@@ -256,6 +247,49 @@ app.post('/createUser', upload.single('avatar'), (req, res) => {
   newUser.save((error) => {
     error ? res.status(404).send() : res.status(200).send(user)
   });
+});
+
+// Send product edit view file with product's corresponding data
+app.route('/userEdit/:id/edit').get((req, res) => {
+  let userId  = req.params.id;
+  ejs.renderFile('./src/userEdit.html', {userId: userId}, null, function(err, str){
+      if (err) res.status(503).send(`error when rendering the view: ${err}`);
+      else {
+        res.end(str);
+      }
+  });
+});
+
+// Get user with id
+app.route('/userEdit/:id').get(async (req, res) => {
+  let userId  = req.params.id;
+  const user = UserModel.findOne({_id: userId}) 
+  user ? res.send(user) : res.status(404).end(`User with id ${userId} does not exist`)
+});
+
+// Update user with id
+app.route('/userEdit/:id').put((req, res) => {
+  let userId  = req.params.id;
+  let{ userName, userEmail } = req.body;
+  UserModel.findOneAndUpdate(
+    {_id: userId},
+    {
+      username: userName,
+      email: userEmail,
+    }
+  )
+  .then(user => {
+    res.send(user)
+  })
+  .catch(err => { console.log(err); res.status(503).end(`Could not update user ${error}`); });
+});
+
+// Delete user with id
+app.route('/userEdit/:id').delete((req, res) => {
+  let userId  = req.params.id;
+  UserModel.findOneAndDelete({_id: userId})
+  .then(user => res.send(user))
+  .catch(err => { console.log(err); res.status(503).end(`Could not delete user ${err}`); });
 });
 
 app.get('/addClient.js', (req, res) => {

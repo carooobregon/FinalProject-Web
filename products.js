@@ -16,46 +16,8 @@ const addWarning = (text) => {
 
 // add product
 const addProduct = (prodObj) => {
-  totalPrice += parseFloat(prodObj.price) //modify total price
-  document.getElementById('totalPrice').innerHTML = parseFloat(totalPrice).toFixed(2)
-
-  let productList = document.getElementById('productList')
-  let newCard = document.createElement('div')
-  newCard.setAttribute("class", "card")
-  let newCardBody = document.createElement('div')
-  newCardBody.setAttribute("class", "card-body")
-
-  let h5 = document.createElement('h5')
-  h5.appendChild(document.createTextNode(prodObj.name))
-  h5.setAttribuete("class", "card-title")
-
-  let firstP = document.createElement('p')
-  firstP.appendChild(document.createTextNode(`Price: ${prodObj.price}`))
-  firstP.setAttribute("class", "card-text")
-
-  let secondP = document.createElement('p')
-  secondP.appendChild(document.createTextNode(`Brand: ${prodObj.brand}`))
-  secondP.setAttribute("class", "card-text")
-
-  let removeButton = document.createElement('button')
-  removeButton.addEventListener('click', (e) => {
-    let target = e.target.parentNode.parentNode
-    totalPrice -= parseFloat(prodObj.price) //modify total price
-    document.getElementById('totalPrice').innerHTML = parseFloat(totalPrice).toFixed(2)
-    productList.removeChild(target)
-  })
-
-  removeButton.appendChild(document.createTextNode('Remove product'))
-  removeButton.setAttribute("class", "btn btn-danger btn-sm")
-
-  newCardBody.appendChild(h5)
-  newCardBody.appendChild(firstP)
-  newCardBody.appendChild(secondP)
-  newCardBody.appendChild(removeButton)
-  newCard.appendChild(newCardBody)
-  newCard.style.margin = "16px"
-
-  productList.appendChild(newCard)
+  alert('Product added successfully! You are being redirected.')
+  window.location.replace('http://127.0.0.1:3000/admin');
 }
 
 productForm.onsubmit = (e) => {
@@ -91,16 +53,4 @@ productForm.onsubmit = (e) => {
       })
   }
 };
-
-const btnLogout = document.getElementById('logout');
-  btnLogout.addEventListener("click", (e) => {
-    axios.post('http://127.0.0.1:3000/logout') // No params, the cookie handles all
-    .then(() => {
-      alert(`You have been logged out, you are being redirected`);
-      window.location.replace('http://127.0.0.1:3000/login');
-    })
-    .catch(error => {
-      alert(`Error: ${error.response.data}`);
-  });
-});
   

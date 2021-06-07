@@ -17,16 +17,15 @@ signUpForm.onsubmit = (e) => {
   formData.append('avatar', files[0])
 
   if(!email || !name || !password) {
-    console.log("Fields can't be empty")
+    alert('All fields must be filled.');
   }
   else{
     axios.post( 
       'http://127.0.0.1:3000/createUser', formData
     )
     .then(response => {
-      console.log(response);
-      alert(`added new user`);
-      window.location.replace('http://127.0.0.1:3000/products');
+      alert('New account created! You are being redirect to authenticate.');
+      window.location.replace('http://127.0.0.1:3000/login');
     })
     .catch(error => {
       console.log(error.response.data)
