@@ -30,3 +30,7 @@ form {
 .hidden {
   display:none;
 }
+
+.linkButtons {
+  margin: 12px 0 0;
+}

@@ -79,3 +79,7 @@ btnLogout.addEventListener("click", (e) => {
       alert(`Error: ${error.response.data}`);
   });
 });
+
+const editProfile = (userID) => {
+  window.location.replace(`http://127.0.0.1:3000/userEdit/${userID}/edit`)
+}

@@ -27,7 +27,9 @@ app.listen(port, () => {
 const generateToken = (user) => {
   let payload = { //values grabbed from allUsers array (change to values of db)
     userEmail: user.userEmail,
-    id: user.id,
+    id: user._id,
+    role: user.role,
+    username: user.username,
   };
   let oneDay = 60 * 60 * 24; // token valid for 1 day
   return token = jwt.sign(payload, secret, { expiresIn: oneDay });
@@ -42,7 +44,6 @@ const requireLogin = (req, res, next) => {
   }
   try{
     payload = jwt.verify(accessToken, secret) // verify the access token, throws error if token expires or invalid signature
-    console.log('User accessing the site');
     req.user = payload; // Add payload to request if necessary (to give a personal welcoming). Payload is user's info (username, role, etc)
     next()
   }
@@ -122,7 +123,12 @@ app.get('/admin', requireLogin, (req, res) => {
 
 // Get normal user's view file where user can buy products. Requires login
 app.get('/', requireLogin, (req, res) => {
-  res.sendFile('shoppingcart.html', {root: './src/'});
+  ejs.renderFile('./src/shoppingcart.html', {user: req.user}, null, function(err, str){
+    if (err) res.status(503).send(`error when rendering the shoppingcart view: ${err}`); 
+    else {
+      res.end(str);
+    }
+  });
 })
 
 app.get('/products.js', (req, res) => {
@@ -209,7 +215,6 @@ app.get('/signup', (req, res) => {
 
 // Logout user. Requires login.
 app.post('/logout', requireLogin, function(req, res){
-  console.log('Logging out')
   res.clearCookie('authorization');
   res.send('User logged out');
 });
@@ -219,7 +224,6 @@ app.post('/login', async (req, res) => {
   const { userEmail, password } = req.body;
   const user = await UserModel.findOne({email: userEmail})  
   if (user) {
-    console.log(`Succesfully logged in`);
     const accessToken = generateToken(user); // Generate access token
     res.cookie("authorization", accessToken, {secure: true, httpOnly: true});
     res.status(200).json(accessToken);
