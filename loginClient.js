@@ -1,5 +1,5 @@
+// On submit form verify empty inputs and user email
 const loginForm = document.getElementById("loginForm")
-
 loginForm.onsubmit = (e) => {
   e.preventDefault(); 
   let userEmail =  document.getElementById('email').value.trim();
@@ -22,3 +22,10 @@ loginForm.onsubmit = (e) => {
     alert(`Error: ${error.response.data}`);
   });
 }
+
+// If user doesn't have an account redirect him to signUp view
+const btnCreateAccount = document.getElementById('createAccount');
+btnCreateAccount.addEventListener("click", (e) => {
+  window.location.replace(`http://127.0.0.1:3000/signup`)
+});
+

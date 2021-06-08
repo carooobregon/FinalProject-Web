@@ -10,12 +10,9 @@ const mongoose = require('mongoose');
 const axios = require('axios').default
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
-
 const app = express()
-const port = 3000
-
-// To create tokens we need a secret password.
-const secret = '5tr0n6P@55W0rD!' // TODO: Change this secret password and move it to .env file
+const port = 3000 // Port using
+const secret = '5tr0n6P@55W0rD!' // Secret password to create tokens
 
 app.use(cors());
 app.use(express.json()); // body-parser
@@ -26,7 +23,7 @@ app.listen(port, () => {
   console.log(`Your port is ${process.env.PORT}`);
 })
 
-// Generate token on login existing user
+// Generate token on login and user exists
 const generateToken = (user) => {
   let payload = { //values grabbed from allUsers array (change to values of db)
     userEmail: user.userEmail,
@@ -36,14 +33,13 @@ const generateToken = (user) => {
   return token = jwt.sign(payload, secret, { expiresIn: oneDay });
 }
 
-// Middleware that verifies user has a token in the cookie (meaning user is logged in)
+// Middleware that verifies if user has a token in the cookie (meaning user is logged in)
 const requireLogin = (req, res, next) => {
   let accessToken = req.cookies.authorization
   if (!accessToken){  // if there's no token stored in cookies user is unauthorized
     console.log('Unauthorized user, redirecting to login page'); 
     return res.redirect('/login');  // redirect to login
   }
-
   try{
     payload = jwt.verify(accessToken, secret) // verify the access token, throws error if token expires or invalid signature
     console.log('User accessing the site');
@@ -69,15 +65,16 @@ const upload = multer({ storage: storage});
 let ProductModel, UserModel;
 
 // Referencing Mongoose
-mongoose.set('useCreateIndex', true);  // remove warning
+mongoose.set('useCreateIndex', true);
 
-// Defining products schema
+// Defining products' schema
 const productSchema = new mongoose.Schema({
     name: {type: String, required: true},
     price: {type: Number, required: true},
     brand: String,
 });
 
+// Defining users' schema
 const userSchema = new mongoose.Schema({
     username: {type: String, required: true},
     email: {type: String},
@@ -184,7 +181,7 @@ app.route('/products/:id').delete((req, res) => {
   let productId  = req.params.id;
   ProductModel.findOneAndDelete({_id: productId})
   .then(product => res.send(product))
-  .catch(err => { console.log(error); res.status(503).end(`Could not delete product ${error}`); });
+  .catch(err => { console.log(err); res.status(503).end(`Could not delete product ${err}`); });
 });
 
 // Send product edit view file with product's corresponding data
@@ -210,25 +207,26 @@ app.get('/signup', (req, res) => {
   res.sendFile('signUp.html', {root: './src/'});
 })
 
-// Logout user
+// Logout user. Requires login.
 app.post('/logout', requireLogin, function(req, res){
   console.log('Logging out')
   res.clearCookie('authorization');
   res.send('User logged out');
 });
 
-app.post('/login', function (req, res) {
+// Verify user exists and generate token if it does
+app.post('/login', async (req, res) => {
   const { userEmail, password } = req.body;
-  const user = UserModel.findOne({_id: userEmail})  
+  const user = await UserModel.findOne({email: userEmail})  
   if (user) {
     console.log(`Succesfully logged in`);
     const accessToken = generateToken(user); // Generate access token
     res.cookie("authorization", accessToken, {secure: true, httpOnly: true});
     res.status(200).json(accessToken);
   }else{
-    res.status(403).send('Invalid credentials'); // User doesn't exist
+    res.status(403).send('You don`t have an account'); // User doesn't exist
   }
-});
+})
 
 // Create user with avatar
 app.post('/createUser', upload.single('avatar'), (req, res) => {
@@ -249,21 +247,21 @@ app.post('/createUser', upload.single('avatar'), (req, res) => {
   });
 });
 
-// Send product edit view file with product's corresponding data
-app.route('/userEdit/:id/edit').get((req, res) => {
+// Logout user
+app.get('/userEdit/:id/edit', requireLogin, (req, res) => {
   let userId  = req.params.id;
   ejs.renderFile('./src/userEdit.html', {userId: userId}, null, function(err, str){
-      if (err) res.status(503).send(`error when rendering the view: ${err}`);
-      else {
-        res.end(str);
-      }
+    if (err) res.status(503).send(`error when rendering the view: ${err}`);
+    else {
+      res.end(str);
+    }
   });
-});
+})
 
 // Get user with id
 app.route('/userEdit/:id').get(async (req, res) => {
   let userId  = req.params.id;
-  const user = UserModel.findOne({_id: userId}) 
+  const user = await UserModel.findOne({_id: userId}) 
   user ? res.send(user) : res.status(404).end(`User with id ${userId} does not exist`)
 });
 
@@ -292,10 +290,12 @@ app.route('/userEdit/:id').delete((req, res) => {
   .catch(err => { console.log(err); res.status(503).end(`Could not delete user ${err}`); });
 });
 
-app.get('/addClient.js', (req, res) => {
-  res.sendFile("addClient.js", {root: './'})
+// SignUp JS file
+app.get('/signUp.js', (req, res) => {
+  res.sendFile("signUp.js", {root: './'})
 })
 
+// Login JS file
 app.get('/loginClient.js', (req, res) => {
   res.sendFile("loginClient.js", {root: './'})
 })

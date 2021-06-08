@@ -33,17 +33,14 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
     const userId = '<%= userId %>'
-    console.log("userId",userId)
-    const userName = document.getElementById('userName')
-    const userEmail = document.getElementById('userEmail')
     const btnSubmit = document.getElementById('submit')    
     const btnDelete = document.getElementById('deletebtn')    
 
     loadUserData()
     btnSubmit.addEventListener("click", (e) => {
       event.preventDefault()            
-      let userName = userName.value.trim()
-      let userEmail = userEmail.value.trim()
+      let userName = document.getElementById('userName').value.trim()
+      let userEmail = document.getElementById('userEmail').value.trim()
       if (userName === '') { alert('Specify a name'); return; }
       if (userEmail ==='' ) { alert('Specify an email'); return; }
 
@@ -65,9 +62,9 @@
     });
 
     btnDelete.addEventListener("click", (e) => {
-      axios.delete(`http://127.0.0.1:3000/userEdit/?email=${userEmail.value}delete`)
+      axios.delete(`http://127.0.0.1:3000/userEdit/${userId}`)
       .then(response => {
-        alert(`User delete successfully. You are being redirected.`);
+        alert(`User delete successfully. Redirected to signup.`);
         window.location.replace('http://127.0.0.1:3000/signup');
       })
       .catch(error => {

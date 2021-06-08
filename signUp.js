@@ -1,6 +1,7 @@
 let signUpForm = document.getElementById("signUpForm")
 let totalPrice = 0
 
+// On submit create user
 signUpForm.onsubmit = (e) => {
   e.preventDefault();
   let name = document.getElementById('userName').value.trim()
@@ -19,11 +20,11 @@ signUpForm.onsubmit = (e) => {
   if(!email || !name || !password) {
     alert('All fields must be filled.');
   }
-  else{
+  else{ // Route to create user and then authenticate
     axios.post( 
       'http://127.0.0.1:3000/createUser', formData
     )
-    .then(response => {
+    .then(() => {
       alert('New account created! You are being redirect to authenticate.');
       window.location.replace('http://127.0.0.1:3000/login');
     })
